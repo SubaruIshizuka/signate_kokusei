@@ -16,6 +16,11 @@ from hyperopt import fmin, tpe, hp, STATUS_OK, Trials
 from sklearn.model_selection import KFold
 
 
+CONFIG_FILE = '../configs/config.yaml'
+with open(CONFIG_FILE, encoding="utf-8") as file:
+    yml = yaml.load(file)
+FIGURE_DIR_NAME = yml['SETTING']['FIGURE_DIR_NAME']
+
 # 定数
 shap_sampling = 10000
 
@@ -329,7 +334,7 @@ class Runner:
         labels = ax.get_xticklabels()
         plt.setp(labels, rotation=0, fontsize=10)
         ax.legend(loc = 'upper left')
-        plt.savefig(self.out_dir_name + self.run_name + '_shap.png', dpi=300, bbox_inches="tight")
+        plt.savefig(FIGURE_DIR_NAME + self.run_name + '_shap.png', dpi=300, bbox_inches="tight")
         plt.close()
 
 
@@ -371,11 +376,13 @@ class Runner:
             }
         elif self.hopt == "lgb_hopt":
             param_space = {
+                'max_depth': hp.quniform('max_depth', 3, 9, 1),
                 'num_leaves': hp.quniform('num_leaves', 50, 200, 10),
-                'max_depth': hp.quniform('max_depth', 3, 10, 1),
                 'min_data_in_leaf': hp.quniform('min_data_in_leaf',  5, 25, 2),
-                'colsample_bytree': hp.uniform('colsample_bytree', 0.5, 1.0),
-                'subsample': hp.uniform('subsample', 0.5, 1.0)  
+                'subsample': hp.quniform('subsample', 0.6, 0.95, 0.05),
+                'colsample_bytree': hp.quniform('colsample_bytree', 0.6, 0.95, 0.05),
+                "reg_alpha": hp.loguniform('reg_alpha', np.log(1e-8), np.log(1.0)),
+                "reg_lambda": hp.loguniform('reg_lambda', np.log(1e-6), np.log(10.0)),
             }
         elif self.hopt == "nn_hopt":
             param_space = {

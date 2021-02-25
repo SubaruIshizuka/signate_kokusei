@@ -284,7 +284,7 @@ if __name__ == '__main__':
     # 学習の設定を読み込む
     run_setting = get_run_info()
     run_setting["shap_calc"] = True
-    run_setting["hopt"] = "xgb_hopt"
+    # run_setting["hopt"] = "xgb_hopt"
 
     # xgbパラメータを設定する
     xgb_params = {
@@ -414,87 +414,87 @@ if __name__ == '__main__':
 
 ##### ニューラルネットワーク ###########################################################
 
-    features = features
+    # features = features
 
-    # CV設定の読み込み
-    cv_setting = get_cv_info(random_state=53)
+    # # CV設定の読み込み
+    # cv_setting = get_cv_info(random_state=53)
 
-    # run nameの設定
-    run_name = get_run_name(cv_setting, model_type="nn")
-    dir_name = MODEL_DIR_NAME + run_name + '/'
+    # # run nameの設定
+    # run_name = get_run_name(cv_setting, model_type="nn")
+    # dir_name = MODEL_DIR_NAME + run_name + '/'
 
-    my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
+    # my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
 
-    # ファイルの設定を読み込む
-    file_setting = get_file_info()
+    # # ファイルの設定を読み込む
+    # file_setting = get_file_info()
     
-    # 学習の設定を読み込む
-    run_setting = get_run_info()
-    run_setting["hopt"] = "nn_hopt"
+    # # 学習の設定を読み込む
+    # run_setting = get_run_info()
+    # run_setting["hopt"] = "nn_hopt"
 
-    # モデルのパラメータ
-    nn_params = {
-        "num_classes": 1, 
-        'input_dropout': 0.0,
-        'hidden_layers': 3,
-        'hidden_units': 96,
-        'hidden_activation': 'relu',
-        'hidden_dropout': 0.2,
-        'batch_norm': 'before_act',
-        "output_activation": "sigmoid",
-        'optimizer': {'type': 'adam', 'lr': 0.000005},
-        "loss": "binary_crossentropy", 
-        "metrics": "accuracy", # カスタム評価関数も使える
-        'batch_size': 64,
-    }
-    # params = {
-    #     "num_classes": 1,
-    #     "input_dropout": 0.1,
-    #     "hidden_layers": 4.0,
-    #     "hidden_units": 160.0,
-    #     "hidden_activation": "relu",
-    #     "hidden_dropout": 0.30000000000000004,
-    #     "batch_norm": "no",
+    # # モデルのパラメータ
+    # nn_params = {
+    #     "num_classes": 1, 
+    #     'input_dropout': 0.0,
+    #     'hidden_layers': 3,
+    #     'hidden_units': 96,
+    #     'hidden_activation': 'relu',
+    #     'hidden_dropout': 0.2,
+    #     'batch_norm': 'before_act',
     #     "output_activation": "sigmoid",
-    #     "optimizer": {
-    #         "lr": 0.009838711682220185,
-    #         "type": "sgd"
-    #     },
-    #     "loss": "binary_crossentropy",
-    #     "metrics": "accuracy",
-    #     "batch_size": 64.0
+    #     'optimizer': {'type': 'adam', 'lr': 0.000005},
+    #     "loss": "binary_crossentropy", 
+    #     "metrics": "accuracy", # カスタム評価関数も使える
+    #     'batch_size': 64,
     # }
+    # # params = {
+    # #     "num_classes": 1,
+    # #     "input_dropout": 0.1,
+    # #     "hidden_layers": 4.0,
+    # #     "hidden_units": 160.0,
+    # #     "hidden_activation": "relu",
+    # #     "hidden_dropout": 0.30000000000000004,
+    # #     "batch_norm": "no",
+    # #     "output_activation": "sigmoid",
+    # #     "optimizer": {
+    # #         "lr": 0.009838711682220185,
+    # #         "type": "sgd"
+    # #     },
+    # #     "loss": "binary_crossentropy",
+    # #     "metrics": "accuracy",
+    # #     "batch_size": 64.0
+    # # }
 
-    runner = Runner(run_name, ModelNN, features, nn_params, file_setting, cv_setting, run_setting)
+    # runner = Runner(run_name, ModelNN, features, nn_params, file_setting, cv_setting, run_setting)
 
-    # 今回の学習で使用した特徴量名を取得
-    use_feature_name = runner.get_feature_name() 
+    # # 今回の学習で使用した特徴量名を取得
+    # use_feature_name = runner.get_feature_name() 
 
-    # 今回の学習で使用したパラメータを取得
-    use_params = runner.get_params()
+    # # 今回の学習で使用したパラメータを取得
+    # use_params = runner.get_params()
 
-    # モデルのconfigをjsonで保存
-    key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
-    value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
-    save_model_config(key_list, value_list, dir_name, run_name)
+    # # モデルのconfigをjsonで保存
+    # key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
+    # value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
+    # save_model_config(key_list, value_list, dir_name, run_name)
     
-    # 学習
-    if cv_setting.get('method') == 'None':
-        runner.run_train_all()  # 全データで学習
-        runner.run_predict_all()  # 予測
-    else:
-        runner.run_train_cv()  # 学習
-        ModelNN.plot_learning_curve(run_name)  # 学習曲線を描画
-        runner.run_predict_cv()  # 予測
+    # # 学習
+    # if cv_setting.get('method') == 'None':
+    #     runner.run_train_all()  # 全データで学習
+    #     runner.run_predict_all()  # 予測
+    # else:
+    #     runner.run_train_cv()  # 学習
+    #     ModelNN.plot_learning_curve(run_name)  # 学習曲線を描画
+    #     runner.run_predict_cv()  # 予測
 
-    # submissionファイルの作成
-    # 今回は,出力が確率なので,閾値の最適化後にラベル変換
-    train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
-    nn_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
-    nn_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
-    nn_preds = get_label(train_labels, nn_train_probs, nn_probs)
+    # # submissionファイルの作成
+    # # 今回は,出力が確率なので,閾値の最適化後にラベル変換
+    # train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
+    # nn_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
+    # nn_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
+    # nn_preds = get_label(train_labels, nn_train_probs, nn_probs)
 
-    Submission.create_submission(run_name, dir_name, nn_preds)  # submit作成
+    # Submission.create_submission(run_name, dir_name, nn_preds)  # submit作成
 
 
 
@@ -503,8 +503,10 @@ if __name__ == '__main__':
     run_name = get_run_name(cv_setting, "ensemble")
 
     # アンサンブル
-    em_train_probs = xgb_train_probs*0.35 + lgb_train_probs*0.35 + nn_train_probs*0.3
-    em_probs = xgb_probs*0.35 + lgb_probs*0.35 + nn_probs*0.3
+    em_train_probs = xgb_train_probs*0.5 + lgb_train_probs*0.5
+    em_probs = xgb_probs*0.5 + lgb_probs*0.5
+    # em_train_probs = xgb_train_probs*0.35 + lgb_train_probs*0.35 + nn_train_probs*0.3
+    # em_probs = xgb_probs*0.35 + lgb_probs*0.35 + nn_probs*0.3
     em_preds = get_label(train_labels, em_train_probs, em_probs)
 
     Submission.create_submission(run_name, dir_name, em_preds)  # submit作成
