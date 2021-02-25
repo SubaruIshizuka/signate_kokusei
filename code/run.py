@@ -287,11 +287,11 @@ if __name__ == '__main__':
     run_setting["hopt"] = "xgb_hopt"
 
     # xgbパラメータを設定する
-    params = {
+    xgb_params = {
         'booster': 'gbtree',
         'objective': 'binary:logistic',
         "eval_metric": "logloss",
-        'eta': 0.1,
+        'eta': 0.01,
         'gamma': 0.0,
         'alpha': 0.0,
         'lambda': 1.0,
@@ -306,7 +306,7 @@ if __name__ == '__main__':
     }
 
     # インスタンス生成
-    runner = Runner(run_name, ModelXGB, features, params, file_setting, cv_setting, run_setting)
+    runner = Runner(run_name, ModelXGB, features, xgb_params, file_setting, cv_setting, run_setting)
 
     # 学習で使用した特徴量名を取得
     use_feature_name = runner.get_feature_name() 
@@ -361,15 +361,15 @@ if __name__ == '__main__':
     run_setting["hopt"] = "lgb_hopt"
 
     # モデルのパラメータ
-    params = {
+    lgb_params = {
       'boosting_type': 'gbdt',
       "objective": 'binary',
-      "metric": "logloss",
+    #   "metric": "logloss",
       "learning_rate": 0.01,
       'max_depth': 3,
       "num_leaves": 31,
-      "bagging_fraction": 1.0,
-      "feature_fraction": 0.8,
+      "subsample": 0.8, # bagging_fraction 
+      "colsample_bytree": 0.8, # feature_fraction
       "min_data_in_leaf": 20,
       "reg_lambda": 1.0,
       "reg_alpha": 0.0,
@@ -379,7 +379,7 @@ if __name__ == '__main__':
       'early_stopping_rounds': 100,
     }
 
-    runner = Runner(run_name, ModelLGB, features, params, file_setting, cv_setting, run_setting)
+    runner = Runner(run_name, ModelLGB, features, lgb_params, file_setting, cv_setting, run_setting)
 
     # 今回の学習で使用した特徴量名を取得
     use_feature_name = runner.get_feature_name() 
@@ -433,7 +433,7 @@ if __name__ == '__main__':
     run_setting["hopt"] = "nn_hopt"
 
     # モデルのパラメータ
-    params = {
+    nn_params = {
         "num_classes": 1, 
         'input_dropout': 0.0,
         'hidden_layers': 3,
@@ -465,7 +465,7 @@ if __name__ == '__main__':
     #     "batch_size": 64.0
     # }
 
-    runner = Runner(run_name, ModelNN, features, params, file_setting, cv_setting, run_setting)
+    runner = Runner(run_name, ModelNN, features, nn_params, file_setting, cv_setting, run_setting)
 
     # 今回の学習で使用した特徴量名を取得
     use_feature_name = runner.get_feature_name() 

@@ -42,10 +42,10 @@ class ModelLGB(Model):
                                 dtrain,
                                 num_boost_round=num_round,
                                 valid_sets=(dtrain, dvalid),
-                                evals_result=evals_result,
                                 valid_names=("train", "eval"),
                                 early_stopping_rounds=early_stopping_rounds,
                                 verbose_eval=verbose_eval,
+                                evals_result=evals_result,
                                 )
             model_array.append(self.model)
             evals_array.append(evals_result)
