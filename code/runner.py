@@ -415,6 +415,7 @@ class Runner:
 
         if cat_cols == "all":
             cat_cols = list(tr_x.dtypes[tr_x.dtypes=="object"].index)
+
         # 変数をループしてtarget encoding
         for c in cat_cols:
             data_tmp = pd.DataFrame({c: tr_x[c], 'target': tr_y})
@@ -427,7 +428,7 @@ class Runner:
 
             # 学習データ(tr_x)を変換
             tmp = np.repeat(np.nan, tr_x.shape[0]) # 変換後の値を格納する配列を準備
-            kf_encoding = KFold(n_splits=4, shuffle=True, random_state=72)
+            kf_encoding = KFold(n_splits=5, shuffle=True, random_state=72)
             for idx_1, idx_2 in kf_encoding.split(tr_x):
                 # out-of-foldで各カテゴリにおける目的変数の平均を計算
                 target_mean = data_tmp.iloc[idx_1].groupby(c)['target'].mean()
@@ -443,6 +444,8 @@ class Runner:
         """
         if cat_cols == "all":
             cat_cols = list(train_x.dtypes[train_x.dtypes=="object"].index)
+
+        print("target_encoding", cat_cols)
         for c in cat_cols:
             # テストデータを変換
             data_tmp = pd.DataFrame({c: train_x[c], 'target': train_y})

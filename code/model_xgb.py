@@ -88,7 +88,7 @@ class ModelXGB(Model):
     def plot_learning_curve(self, run_name):
         """学習過程の可視化、foldが４以上の時のみ
         """
-        eval_metiric = "logloss" # eval_metiricに応じて変更
+        eval_metiric = "error" # eval_metiricに応じて変更
         print(evals_array[0]) # eval_metiricになにが使われているのかを確認
 
         fig, axes = plt.subplots(2, 2, figsize=(12,8))
@@ -96,10 +96,10 @@ class ModelXGB(Model):
         plt.tight_layout()
         plt.title('Learning curve')
         for i, ax in enumerate(axes.ravel()):
-            ax.plot(evals_array[i]['train'][eval_metiric][10:], label="train")
-            ax.plot(evals_array[i]['eval'][eval_metiric][10:], label="valid")
+            ax.plot(list(evals_array[i]['train'].values())[0][10:], label="train")
+            ax.plot(list(evals_array[i]['eval'].values())[0][10:], label="valid")
             ax.set_xlabel('epoch')
-            ax.set_ylabel(eval_metiric)
+            ax.set_ylabel(list(evals_array[i]["train"].keys())[0])
             ax.legend()
             ax.grid(True)
 

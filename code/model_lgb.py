@@ -79,7 +79,7 @@ class ModelLGB(Model):
 
     @classmethod
     def plot_learning_curve(self, run_name):
-        eval_metiric = "logloss"
+        eval_metiric = "error"
         print(evals_array[0])
 
         # 学習過程の可視化、foldが４以上の時のみ
@@ -89,10 +89,10 @@ class ModelLGB(Model):
         plt.title('Learning curve')
 
         for i, ax in enumerate(axes.ravel()):
-            ax.plot(evals_array[i]['train'][eval_metiric][10:], label="train")
-            ax.plot(evals_array[i]['eval'][eval_metiric][10:], label="valid")
+            ax.plot(list(evals_array[i]['train'].values())[0][10:], label="train")
+            ax.plot(list(evals_array[i]['eval'].values())[0][10:], label="valid")
             ax.set_xlabel('epoch')
-            ax.set_ylabel(eval_metiric)
+            ax.set_ylabel(list(evals_array[i]["train"].keys())[0])
             ax.legend()
             ax.grid(True)
 
