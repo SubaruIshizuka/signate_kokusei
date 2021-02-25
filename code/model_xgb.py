@@ -13,7 +13,7 @@ CONFIG_FILE = '../configs/config.yaml'
 with open(CONFIG_FILE, encoding="utf-8") as file:
     yml = yaml.load(file)
 FIGURE_DIR_NAME = yml['SETTING']['FIGURE_DIR_NAME']
-
+FEATURE_DIR_NAME = yml['SETTING']['FEATURE_DIR_NAME']  # 生成した特徴量の出力場所
 
 model_array = [] # 各foldのモデルを保存する配列
 evals_array = [] # 各foldの学習過程を保存する配列
@@ -123,9 +123,14 @@ class ModelXGB(Model):
         importance_df_mean = pd.DataFrame(val_gain.mean(axis=1), columns=['importance']).fillna(0)
         # 各foldの標準偏差を算出
         importance_df_std = pd.DataFrame(val_gain.std(axis=1), columns=['importance']).fillna(0)
-
         # マージ
         df = pd.merge(importance_df_mean, importance_df_std, left_index=True, right_index=True ,suffixes=['_mean', '_std'])
+
+        # 特徴量リストの保存
+        features_list = list(df.index)
+        with open(FEATURE_DIR_NAME + 'sorted_by_importances.txt', 'wt') as f:
+            for i in range(len(features_list)):
+                f.write('\'' + str(features_list[i]) + '\',\n')
 
         # 変動係数を算出
         df['coef_of_var'] = df['importance_std'] / df['importance_mean']
