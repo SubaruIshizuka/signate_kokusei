@@ -47,8 +47,6 @@ def get_cross_cate_features(all_df):
         'relationship', 
         'race', 
         'sex',
-        # 'native-country',
-        # 'bin_age',
         'bin_general'
     ]
     for cols in itertools.combinations(obj_cols, 2):
@@ -66,24 +64,31 @@ def get_agg_features(all_df):
     """集約特徴量
     """
     cate_cols = [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        # "native-country"
+        'workclass', 'education', 'marital-status', 'occupation',
+       'relationship', 'race', 'sex', 'bin_general',
+       'workclass_education', 'workclass_marital-status',
+       'workclass_occupation', 'workclass_relationship', 'workclass_race',
+       'workclass_sex', 'workclass_bin_general', 'education_marital-status',
+       'education_occupation', 'education_relationship', 'education_race',
+       'education_sex', 'education_bin_general', 'marital-status_occupation',
+       'marital-status_relationship', 'marital-status_race',
+       'marital-status_sex', 'marital-status_bin_general',
+       'occupation_relationship', 'occupation_race', 'occupation_sex',
+       'occupation_bin_general', 'relationship_race', 'relationship_sex',
+       'relationship_bin_general', 'race_sex', 'race_bin_general',
+       'sex_bin_general'
     ]
     group_values = [
         "age",
         "education-num",
+        "prod_age_educationnum",
+        "ratio_age_educationnum"
     ]
     for col in cate_cols:
         for group in group_values:
-            all_df.loc[:, "mean_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).mean()[group]) # 平均
+#             all_df.loc[:, "mean_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).mean()[group]) # 平均
             all_df.loc[:, "std_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).std()[group])   # 分散
-            all_df.loc[:, "max_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).max()[group])   # 最大値
+#             all_df.loc[:, "max_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).max()[group])   # 最大値
             # all_df.loc[:, "min_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).min()[group])   # 最小値
             # all_df.loc[:, "nunique_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).nunique()[group])   # uniaue
             # all_df.loc[:, "median_{}_{}".format(col, group)] = all_df[col].map(all_df.groupby(col).median()[group])   # 中央値
@@ -93,18 +98,25 @@ def get_relative_features(all_df):
     """相対値
     """
     cate_cols = [
-        "workclass",
-        "education",
-        "marital-status",
-        "occupation",
-        "relationship",
-        "race",
-        "sex",
-        # "native-country"
+        'workclass', 'education', 'marital-status', 'occupation',
+       'relationship', 'race', 'sex', 'native-country', 'bin_general',
+       'workclass_education', 'workclass_marital-status',
+       'workclass_occupation', 'workclass_relationship', 'workclass_race',
+       'workclass_sex', 'workclass_bin_general', 'education_marital-status',
+       'education_occupation', 'education_relationship', 'education_race',
+       'education_sex', 'education_bin_general', 'marital-status_occupation',
+       'marital-status_relationship', 'marital-status_race',
+       'marital-status_sex', 'marital-status_bin_general',
+       'occupation_relationship', 'occupation_race', 'occupation_sex',
+       'occupation_bin_general', 'relationship_race', 'relationship_sex',
+       'relationship_bin_general', 'race_sex', 'race_bin_general',
+       'sex_bin_general'
     ]
     group_values = [
         "age",
         "education-num",
+        "prod_age_educationnum",
+        "ratio_age_educationnum"
     ]
     # カテゴリごとの平均との差
     for col in cate_cols:
@@ -118,14 +130,20 @@ def get_freq_features(all_df):
     """frequency encoding
     """
     cate_cols = [
-        "workclass",
-        "education",
-        "marital-status",
+#         "workclass",
+#         "education",
+#         "marital-status",
         "occupation",
-        "relationship",
-        "race",
-        # "sex",
-        # "native-country"
+#         "relationship",
+#         "race",
+#         "sex",
+#         "native-country",
+        'education_marital-status',
+        'marital-status_occupation',
+        'education_occupation',
+        'marital-status_relationship',
+        'education_relationship',
+        'marital-status_bin_general',
     ]
     for col in cate_cols:
         freq = all_df[col].value_counts()
@@ -141,7 +159,6 @@ def get_labelencoding(all_df):
         le = LabelEncoder()
         all_df.loc[:, col] = le.fit_transform(all_df[col])
     return all_df
-
 
 
 
