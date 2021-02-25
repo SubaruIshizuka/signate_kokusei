@@ -125,17 +125,16 @@ class ModelXGB(Model):
         importance_df_std = pd.DataFrame(val_gain.std(axis=1), columns=['importance']).fillna(0)
         # マージ
         df = pd.merge(importance_df_mean, importance_df_std, left_index=True, right_index=True ,suffixes=['_mean', '_std'])
-
-        # 特徴量リストの保存
-        features_list = list(df.index)
-        with open(FEATURE_DIR_NAME + 'sorted_by_importances.txt', 'wt') as f:
-            for i in range(len(features_list)):
-                f.write('\'' + str(features_list[i]) + '\',\n')
-
         # 変動係数を算出
         df['coef_of_var'] = df['importance_std'] / df['importance_mean']
         df['coef_of_var'] = df['coef_of_var'].fillna(0)
         df = df.sort_values('importance_mean', ascending=True)
+
+        # 重要度順の特徴量リストを保存
+        features_list = list(df.index)
+        with open(dir_name + 'sorted_by_xgbimportances.txt', 'wt') as f:
+            for i in range(len(features_list)):
+                f.write('\'' + str(features_list[i]) + '\',\n')
 
         # 出力
         fig, ax1 = plt.subplots(figsize = (10,30))
