@@ -131,7 +131,7 @@ class ModelXGB(Model):
         df = df.sort_values('importance_mean', ascending=True)
 
         # 重要度順の特徴量リストを保存
-        features_list = list(df.index)
+        features_list = list(df.index)[::-1]
         with open(dir_name + 'sorted_by_xgbimportances.txt', 'wt') as f:
             for i in range(len(features_list)):
                 f.write('\'' + str(features_list[i]) + '\',\n')
