@@ -412,6 +412,9 @@ class Runner:
     def get_target_encoding(self, tr_x, tr_y, va_x, cat_cols):
         """target encoding
         """
+
+        if cat_cols == "all":
+            cat_cols = list(tr_x.dtypes[tr_x.dtypes=="object"].index)
         # 変数をループしてtarget encoding
         for c in cat_cols:
             data_tmp = pd.DataFrame({c: tr_x[c], 'target': tr_y})
@@ -438,6 +441,8 @@ class Runner:
     def get_test_target_enc(self, train_x, train_y, test_x, cat_cols):
         """target encoding for test data
         """
+        if cat_cols == "all":
+            cat_cols = list(train_x.dtypes[train_x.dtypes=="object"].index)
         for c in cat_cols:
             # テストデータを変換
             data_tmp = pd.DataFrame({c: train_x[c], 'target': train_y})

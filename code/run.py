@@ -151,15 +151,7 @@ def get_run_info():
         'save_train_pred': True,    # trainデータに対する予測値を保存するか否か,閾値の最適化に使用
         "hopt": False,           # パラメータチューニングするか否か
         "target_enc": True,     # target encoding をするか否か
-        "cat_cols": [
-            'workclass',
-            'education',
-            'marital-status',
-            'occupation',
-            'relationship', 
-            'bin_general',
-            ]
-
+        "cat_cols": "all",      # target encodingするカラムをリストで指定
     }
     return run_setting
 
@@ -332,6 +324,7 @@ if __name__ == '__main__':
     else:
         runner.run_train_cv()  # 学習
         ModelXGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
+        ModelXGB.plot_learning_curve(run_name)  # learning curveを描画
         runner.run_predict_cv()  # 予測
 
     # submissionファイルの作成
@@ -400,6 +393,7 @@ if __name__ == '__main__':
     else:
         runner.run_train_cv()  # 学習
         ModelLGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
+        ModelLGB.plot_learning_curve(run_name)  # learning curveを描画
         runner.run_predict_cv()  # 予測
 
     # submissionファイルの作成
