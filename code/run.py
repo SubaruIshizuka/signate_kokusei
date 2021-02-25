@@ -147,7 +147,7 @@ def get_run_info():
     """
     run_setting = {
         'target': TARGET,       # 目的変数
-        'calc_shap': True,     # shap値を計算するか否か
+        'calc_shap': False,     # shap値を計算するか否か
         'save_train_pred': True,    # trainデータに対する予測値を保存するか否か,閾値の最適化に使用
         "hopt": False,           # パラメータチューニングするか否か
         "target_enc": True,     # target encoding をするか否か
@@ -283,12 +283,14 @@ if __name__ == '__main__':
 
     # 学習の設定を読み込む
     run_setting = get_run_info()
+    run_setting["shap_calc"] = True
     run_setting["hopt"] = "xgb_hopt"
 
     # xgbパラメータを設定する
     params = {
         'booster': 'gbtree',
         'objective': 'binary:logistic',
+        "eval_metric": "logloss",
         'eta': 0.1,
         'gamma': 0.0,
         'alpha': 0.0,
@@ -306,10 +308,10 @@ if __name__ == '__main__':
     # インスタンス生成
     runner = Runner(run_name, ModelXGB, features, params, file_setting, cv_setting, run_setting)
 
-    # 今回の学習で使用した特徴量名を取得
+    # 学習で使用した特徴量名を取得
     use_feature_name = runner.get_feature_name() 
 
-    # 今回の学習で使用したパラメータを取得
+    # 学習で使用したパラメータを取得
     use_params = runner.get_params()
 
     # モデルのconfigをjsonで保存
@@ -317,7 +319,7 @@ if __name__ == '__main__':
     value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
     save_model_config(key_list, value_list, dir_name, run_name)
     
-    # 学習
+    # 学習,予測
     if cv_setting.get('method') == 'None':
         runner.run_train_all()  # 全データで学習
         runner.run_predict_all()  # 予測
@@ -357,16 +359,20 @@ if __name__ == '__main__':
     # 学習の設定を読み込む
     run_setting = get_run_info()
     run_setting["hopt"] = "lgb_hopt"
-    run_setting["calc_shap"] = False
 
     # モデルのパラメータ
     params = {
       'boosting_type': 'gbdt',
       "objective": 'binary',
+      "metric": "logloss",
       "learning_rate": 0.01,
+      'max_depth': 3,
       "num_leaves": 31,
-      'colsample_bytree': .5,
-      "reg_lambda": 5,
+      "bagging_fraction": 1.0,
+      "feature_fraction": 0.8,
+      "min_data_in_leaf": 20,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0.0,
       'random_state': 71,
       'num_boost_round': 5000,
       "verbose_eval": False,
@@ -424,8 +430,7 @@ if __name__ == '__main__':
     
     # 学習の設定を読み込む
     run_setting = get_run_info()
-    run_setting["hopt"] = False
-    run_setting["calc_shap"] =False
+    run_setting["hopt"] = "nn_hopt"
 
     # モデルのパラメータ
     params = {
