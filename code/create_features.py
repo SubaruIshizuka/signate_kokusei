@@ -430,8 +430,28 @@ def get_svd(all_df):
         'std_marital-status_education-num',
         'std_relationship_education-num',
         'std_race_sex_prod_age_educationnum',
+        'education_occupation_diff_prod_age_educationnum',
+        'workclass_bin_general_diff_ratio_age_educationnum',
+        'std_workclass_occupation_ratio_age_educationnum',
+        'workclass_occupation_diff_education-num',
+        'bin_general_diff_prod_age_educationnum',
+        'workclass_bin_general_diff_prod_age_educationnum',
+        'occupation_bin_general_diff_prod_age_educationnum',
+        'std_education_occupation_education-num',
+        'workclass_occupation',
+        'workclass_race_diff_prod_age_educationnum',
+        'marital-status_bin_general_diff_age',
+        'std_workclass_occupation_prod_age_educationnum',
+        'workclass_marital-status_diff_prod_age_educationnum',
+        'occupation_bin_general_diff_ratio_age_educationnum',
+        'occupation_sex',
+        'std_marital-status_relationship_prod_age_educationnum',
+        'education_bin_general_diff_ratio_age_educationnum',
+        'std_education_occupation_prod_age_educationnum',
+        'occupation_relationship_diff_prod_age_educationnum',
+        'workclass_race_diff_education-num',
+
     ]
-    
     df = all_df.copy().loc[:, cols]
     
     df = get_labelencoding(df)
@@ -443,7 +463,7 @@ def get_svd(all_df):
         df = df.fillna(df[col].mean())
 
     # svd
-    n_components = 10
+    n_components = 5
     svd = TruncatedSVD(n_components=n_components, random_state=35)
     svd.fit(df)
     svd_df = pd.DataFrame(svd.transform(df),
