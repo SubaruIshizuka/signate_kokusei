@@ -220,150 +220,150 @@ if __name__ == '__main__':
         "svd_4"
     ]
 
-#     # CV設定の読み込み
-#     cv_setting = get_cv_info()
+    # CV設定の読み込み
+    cv_setting = get_cv_info()
 
-#     # run name設定の読み込み
-#     run_name = get_run_name(cv_setting, model_type="xgb")
-#     dir_name = MODEL_DIR_NAME + run_name + '/'
+    # run name設定の読み込み
+    run_name = get_run_name(cv_setting, model_type="xgb")
+    dir_name = MODEL_DIR_NAME + run_name + '/'
 
-#     # ログを吐くディレクトリを作成する
-#     # exist_check(MODEL_DIR_NAME, run_name)  # これは使わない、使うと実行が終わらない
-#     my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
+    # ログを吐くディレクトリを作成する
+    # exist_check(MODEL_DIR_NAME, run_name)  # これは使わない、使うと実行が終わらない
+    my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
 
-#     # ファイルの設定を読み込む
-#     file_setting = get_file_info()
+    # ファイルの設定を読み込む
+    file_setting = get_file_info()
 
-#     # 学習の設定を読み込む
-#     run_setting = get_run_info()
-#     run_setting["calc_shap"] = True
-#     run_setting["hopt"] = "xgb_hopt"
+    # 学習の設定を読み込む
+    run_setting = get_run_info()
+    run_setting["calc_shap"] = True
+    run_setting["hopt"] = "xgb_hopt"
 
-#     # xgbパラメータを設定する
-#     xgb_params = {
-#         'booster': 'gbtree',
-#         'objective': 'binary:logistic',
-#         "eval_metric": "logloss",
-#         'eta': 0.01,
-#         'gamma': 0.0,
-#         'alpha': 0.0,
-#         'lambda': 1.0,
-#         'min_child_weight': 1,
-#         'max_depth': 5,
-#         'subsample': 0.8,
-#         'colsample_bytree': 0.8,
-#         'random_state': 71,
-#         'num_round': 5000,
-#         "verbose": False,
-#         'early_stopping_rounds': 100,
-#     }
+    # xgbパラメータを設定する
+    xgb_params = {
+        'booster': 'gbtree',
+        'objective': 'binary:logistic',
+        "eval_metric": "logloss",
+        'eta': 0.01,
+        'gamma': 0.0,
+        'alpha': 0.0,
+        'lambda': 1.0,
+        'min_child_weight': 1,
+        'max_depth': 5,
+        'subsample': 0.8,
+        'colsample_bytree': 0.8,
+        'random_state': 71,
+        'num_round': 5000,
+        "verbose": False,
+        'early_stopping_rounds': 100,
+    }
 
-#     # インスタンス生成
-#     runner = Runner(run_name, ModelXGB, features, xgb_params, file_setting, cv_setting, run_setting)
+    # インスタンス生成
+    runner = Runner(run_name, ModelXGB, features, xgb_params, file_setting, cv_setting, run_setting)
 
-#     # 学習で使用した特徴量名を取得
-#     use_feature_name = runner.get_feature_name() 
+    # 学習で使用した特徴量名を取得
+    use_feature_name = runner.get_feature_name() 
 
-#     # 学習で使用したパラメータを取得
-#     use_params = runner.get_params()
+    # 学習で使用したパラメータを取得
+    use_params = runner.get_params()
 
-#     # モデルのconfigをjsonで保存
-#     key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
-#     value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
-#     save_model_config(key_list, value_list, dir_name, run_name)
+    # モデルのconfigをjsonで保存
+    key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
+    value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
+    save_model_config(key_list, value_list, dir_name, run_name)
     
-#     # 学習,予測
-#     if cv_setting.get('method') == 'None':
-#         runner.run_train_all()  # 全データで学習
-#         runner.run_predict_all()  # 予測
-#     else:
-#         runner.run_train_cv()  # 学習
-#         ModelXGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
-#         ModelXGB.plot_learning_curve(run_name)  # learning curveを描画
-#         runner.run_predict_cv()  # 予測
+    # 学習,予測
+    if cv_setting.get('method') == 'None':
+        runner.run_train_all()  # 全データで学習
+        runner.run_predict_all()  # 予測
+    else:
+        runner.run_train_cv()  # 学習
+        ModelXGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
+        ModelXGB.plot_learning_curve(run_name)  # learning curveを描画
+        runner.run_predict_cv()  # 予測
 
-#     # submissionファイルの作成
-#     # 今回は、出力が確率なのでラベルに変換
-#     train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
-#     xgb_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
-#     xgb_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
-#     xgb_preds = get_label(train_labels, xgb_train_probs, xgb_probs)
+    # submissionファイルの作成
+    # 今回は、出力が確率なのでラベルに変換
+    train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
+    xgb_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
+    xgb_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
+    xgb_preds = get_label(train_labels, xgb_train_probs, xgb_probs)
 
-#     Submission.create_submission(run_name, dir_name, xgb_preds)  # submit作成
+    Submission.create_submission(run_name, dir_name, xgb_preds)  # submit作成
 
     
 
-# ##### 学習・推論 LightGBM #############################################################
+##### 学習・推論 LightGBM #############################################################
 
-#     features = features
+    features = features
 
-#     # CV設定の読み込み
-#     cv_setting = get_cv_info(random_state=86)
+    # CV設定の読み込み
+    cv_setting = get_cv_info(random_state=86)
 
-#     # run nameの設定
-#     run_name = get_run_name(cv_setting, model_type="lgb")
-#     dir_name = MODEL_DIR_NAME + run_name + '/'
+    # run nameの設定
+    run_name = get_run_name(cv_setting, model_type="lgb")
+    dir_name = MODEL_DIR_NAME + run_name + '/'
 
-#     my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
+    my_makedirs(dir_name)  # runディレクトリの作成。ここにlogなどが吐かれる
 
-#     # ファイルの設定を読み込む
-#     file_setting = get_file_info()
+    # ファイルの設定を読み込む
+    file_setting = get_file_info()
     
-#     # 学習の設定を読み込む
-#     run_setting = get_run_info()
-#     run_setting["hopt"] = "lgb_hopt"
+    # 学習の設定を読み込む
+    run_setting = get_run_info()
+    run_setting["hopt"] = "lgb_hopt"
 
-#     # モデルのパラメータ
-#     lgb_params = {
-#       'boosting_type': 'gbdt',
-#       "objective": 'binary',
-#     #   "metric": "logloss",
-#       "learning_rate": 0.01,
-#       'max_depth': 3,
-#       "num_leaves": 31,
-#       "subsample": 0.8, # bagging_fraction 
-#       "colsample_bytree": 0.8, # feature_fraction
-#       "min_data_in_leaf": 20,
-#       "reg_lambda": 1.0,
-#       "reg_alpha": 0.0,
-#       'random_state': 71,
-#       'num_boost_round': 5000,
-#       "verbose_eval": False,
-#       'early_stopping_rounds': 100,
-#     }
+    # モデルのパラメータ
+    lgb_params = {
+      'boosting_type': 'gbdt',
+      "objective": 'binary',
+    #   "metric": "logloss",
+      "learning_rate": 0.01,
+      'max_depth': 3,
+      "num_leaves": 31,
+      "subsample": 0.8, # bagging_fraction 
+      "colsample_bytree": 0.8, # feature_fraction
+      "min_data_in_leaf": 20,
+      "reg_lambda": 1.0,
+      "reg_alpha": 0.0,
+      'random_state': 71,
+      'num_boost_round': 5000,
+      "verbose_eval": False,
+      'early_stopping_rounds': 100,
+    }
 
-#     # インスタンス生成
-#     runner = Runner(run_name, ModelLGB, features, lgb_params, file_setting, cv_setting, run_setting)
+    # インスタンス生成
+    runner = Runner(run_name, ModelLGB, features, lgb_params, file_setting, cv_setting, run_setting)
 
-#     # 今回の学習で使用した特徴量名を取得
-#     use_feature_name = runner.get_feature_name() 
+    # 今回の学習で使用した特徴量名を取得
+    use_feature_name = runner.get_feature_name() 
 
-#     # 今回の学習で使用したパラメータを取得
-#     use_params = runner.get_params()
+    # 今回の学習で使用したパラメータを取得
+    use_params = runner.get_params()
 
-#     # モデルのconfigをjsonで保存
-#     key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
-#     value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
-#     save_model_config(key_list, value_list, dir_name, run_name)
+    # モデルのconfigをjsonで保存
+    key_list = ['load_features', 'use_features', 'model_params', 'file_setting', 'cv_setting', "run_setting"]
+    value_list = [features, use_feature_name, use_params, file_setting, cv_setting, run_setting]
+    save_model_config(key_list, value_list, dir_name, run_name)
     
-#     # 学習
-#     if cv_setting.get('method') == 'None':
-#         runner.run_train_all()  # 全データで学習
-#         runner.run_predict_all()  # 予測
-#     else:
-#         runner.run_train_cv()  # 学習
-#         ModelLGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
-#         ModelLGB.plot_learning_curve(run_name)  # learning curveを描画
-#         runner.run_predict_cv()  # 予測
+    # 学習
+    if cv_setting.get('method') == 'None':
+        runner.run_train_all()  # 全データで学習
+        runner.run_predict_all()  # 予測
+    else:
+        runner.run_train_cv()  # 学習
+        ModelLGB.calc_feature_importance(dir_name, run_name, use_feature_name)  # feature_importanceを計算
+        ModelLGB.plot_learning_curve(run_name)  # learning curveを描画
+        runner.run_predict_cv()  # 予測
 
-#     # submissionファイルの作成
-#     # 今回は,出力が確率なので,閾値の最適化後にラベル変換
-#     train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
-#     lgb_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
-#     lgb_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
-#     lgb_preds = get_label(train_labels, lgb_train_probs, lgb_probs)
+    # submissionファイルの作成
+    # 今回は,出力が確率なので,閾値の最適化後にラベル変換
+    train_labels = pd.read_pickle(FEATURE_DIR_NAME + f'{file_setting.get("train_file_name")}')[run_setting.get("target")]
+    lgb_train_probs = Util.load_df_pickle(dir_name + f'{run_name}-train_preds.pkl')
+    lgb_probs = Util.load_df_pickle(dir_name + f'{run_name}-pred.pkl')
+    lgb_preds = get_label(train_labels, lgb_train_probs, lgb_probs)
 
-#     Submission.create_submission(run_name, dir_name, lgb_preds)  # submit作成
+    Submission.create_submission(run_name, dir_name, lgb_preds)  # submit作成
 
 
 ##### ニューラルネットワーク ###########################################################
@@ -384,40 +384,41 @@ if __name__ == '__main__':
     
     # 学習の設定を読み込む
     run_setting = get_run_info()
-    # run_setting["hopt"] = "nn_hopt"
+    run_setting["hopt"] = "nn_hopt"
 
     # モデルのパラメータ
-    nn_params = {
-        "num_classes": 1, 
-        'input_dropout': 0.0,
-        'hidden_layers': 3,
-        'hidden_units': 96,
-        'hidden_activation': 'relu',
-        'hidden_dropout': 0.2,
-        'batch_norm': 'before_act',
-        "output_activation": "sigmoid",
-        'optimizer': {'type': 'adam', 'lr': 0.0001},
-        "loss": "binary_crossentropy", 
-        "metrics": "accuracy", # カスタム評価関数も使える
-        'batch_size': 64,
-    }
-    # params = {
-    #     "num_classes": 1,
-    #     "input_dropout": 0.1,
-    #     "hidden_layers": 4.0,
-    #     "hidden_units": 160.0,
-    #     "hidden_activation": "relu",
-    #     "hidden_dropout": 0.30000000000000004,
-    #     "batch_norm": "no",
+    # nn_params = {
+    #     "num_classes": 1, 
+    #     'input_dropout': 0.0,
+    #     'hidden_layers': 3,
+    #     'hidden_units': 96,
+    #     'hidden_activation': 'relu',
+    #     'hidden_dropout': 0.2,
+    #     'batch_norm': 'before_act',
     #     "output_activation": "sigmoid",
-    #     "optimizer": {
-    #         "lr": 0.009838711682220185,
-    #         "type": "sgd"
-    #     },
-    #     "loss": "binary_crossentropy",
-    #     "metrics": "accuracy",
-    #     "batch_size": 64.0
+    #     'optimizer': {'type': 'adam', 'lr': 0.0001},
+    #     "loss": "binary_crossentropy", 
+    #     "metrics": "accuracy", # カスタム評価関数も使える
+    #     'batch_size': 64,
     # }
+
+    nn_params = {
+        "num_classes": 1,
+        "input_dropout": 0.1,
+        "hidden_layers": 4.0,
+        "hidden_units": 160.0,
+        "hidden_activation": "relu",
+        "hidden_dropout": 0.30000000000000004,
+        "batch_norm": "no",
+        "output_activation": "sigmoid",
+        "optimizer": {
+            "lr": 0.009838711682220185,
+            "type": "sgd"
+        },
+        "loss": "binary_crossentropy",
+        "metrics": "accuracy",
+        "batch_size": 64.0
+    }
 
     runner = Runner(run_name, ModelNN, features, nn_params, file_setting, cv_setting, run_setting)
 
@@ -454,13 +455,13 @@ if __name__ == '__main__':
 
 ##### アンサンブル ####################################################################
 
-    # run_name = get_run_name(cv_setting, "ensemble")
+    run_name = get_run_name(cv_setting, "ensemble")
 
-    # # アンサンブル
+    # アンサンブル
     # em_train_probs = xgb_train_probs*0.5 + lgb_train_probs*0.5
     # em_probs = xgb_probs*0.5 + lgb_probs*0.5
-    # # em_train_probs = xgb_train_probs*0.35 + lgb_train_probs*0.35 + nn_train_probs*0.3
-    # # em_probs = xgb_probs*0.35 + lgb_probs*0.35 + nn_probs*0.3
-    # em_preds = get_label(train_labels, em_train_probs, em_probs)
+    em_train_probs = xgb_train_probs*0.35 + lgb_train_probs*0.35 + nn_train_probs*0.3
+    em_probs = xgb_probs*0.35 + lgb_probs*0.35 + nn_probs*0.3
+    em_preds = get_label(train_labels, em_train_probs, em_probs)
 
-    # Submission.create_submission(run_name, dir_name, em_preds)  # submit作成
+    Submission.create_submission(run_name, dir_name, em_preds)  # submit作成

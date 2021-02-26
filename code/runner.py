@@ -405,7 +405,7 @@ class Runner:
 
 
         # hyperoptによるパラメータ探索の実行
-        max_evals = 30  # 試行回数
+        max_evals = 100  # 試行回数
         trials = Trials()
         history = []
         np.random.seed(20) # foldの選択seed
