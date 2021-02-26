@@ -62,7 +62,7 @@ class ModelLGB(Model):
 
     # shapを計算するver うまくいかない
     def predict_and_shap(self, te_x, shap_sampling):
-        fold_importance = shap.TreeExplainer(self.model).shap_values(te_x[:shap_sampling])
+        fold_importance = shap.TreeExplainer(model=self.model).shap_values(X=te_x[:shap_sampling])
         valid_prediticion = self.model.predict(te_x, num_iteration=self.model.best_iteration)
         return valid_prediticion, fold_importance
 
