@@ -223,6 +223,17 @@ if __name__ == '__main__':
         'education_sex',
         'std_education_occupation_education-num',
         'race_bin_general',
+        'svd_0',
+        'svd_1',
+        'svd_2',
+        'svd_3',
+        'svd_4',
+        'svd_5',
+        'svd_6',
+        'svd_7',
+        'svd_8',
+        'svd_9',
+
     ]
     # CV設定の読み込み
     cv_setting = get_cv_info()

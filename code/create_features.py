@@ -468,6 +468,7 @@ def main():
     df = get_agg_features(df)
     df = get_relative_features(df)
     df = get_freq_features(df)
+    df = get_svd(df)
     # df = get_labelencoding(df)
     
     # trainとtestに分割
