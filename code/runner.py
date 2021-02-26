@@ -325,6 +325,12 @@ class Runner:
                         columns=['Mean Abs Shapley', 'Feature']).set_index('Feature')
         ma_shap = ma_shap.sort_values('Mean Abs Shapley', ascending=True)
 
+        # shap値順の特徴量リストを保存
+        features_list = list(ma_shap.index)[::-1]
+        with open(self.out_dir_name + 'sorted_by_shap.txt', 'wt') as f:
+            for i in range(len(features_list)):
+                f.write('\'' + str(features_list[i]) + '\',\n')
+
         # 可視化
         fig = plt.figure(figsize = (8,30))
         plt.tick_params(labelsize=12) # 図のラベルのfontサイズ
