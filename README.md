@@ -2,8 +2,7 @@
 
 signate 国勢調査からの収入予測
 
-## 動作検証済み環境
-OS: MacOS Catalina  
+## 環境
 python: 3.7.2
 
 # 手順
