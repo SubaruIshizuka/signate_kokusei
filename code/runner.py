@@ -383,8 +383,8 @@ class Runner:
         elif self.hopt == "lgb_hopt":
             param_space = {
                 'max_depth': hp.quniform('max_depth', 3, 9, 1),
-                'num_leaves': hp.quniform('num_leaves', 50, 200, 10),
-                'min_data_in_leaf': hp.quniform('min_data_in_leaf',  5, 25, 2),
+                'num_leaves': hp.quniform('num_leaves', 10, 200, 10),
+                'min_data_in_leaf': hp.quniform('min_data_in_leaf',  3, 25, 2),
                 'subsample': hp.quniform('subsample', 0.6, 0.95, 0.05),
                 'colsample_bytree': hp.quniform('colsample_bytree', 0.6, 0.95, 0.05),
                 "reg_alpha": hp.loguniform('reg_alpha', np.log(1e-8), np.log(1.0)),
@@ -405,7 +405,7 @@ class Runner:
 
 
         # hyperoptによるパラメータ探索の実行
-        max_evals = 100  # 試行回数
+        max_evals = 30  # 試行回数
         trials = Trials()
         history = []
         np.random.seed(20) # foldの選択seed

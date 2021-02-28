@@ -384,7 +384,7 @@ if __name__ == '__main__':
     
     # 学習の設定を読み込む
     run_setting = get_run_info()
-    run_setting["hopt"] = "nn_hopt"
+    # run_setting["hopt"] = "nn_hopt"
 
     # モデルのパラメータ
     # nn_params = {
@@ -404,20 +404,17 @@ if __name__ == '__main__':
 
     nn_params = {
         "num_classes": 1,
-        "input_dropout": 0.1,
-        "hidden_layers": 4.0,
-        "hidden_units": 160.0,
-        "hidden_activation": "relu",
-        "hidden_dropout": 0.30000000000000004,
-        "batch_norm": "no",
+        'input_dropout': 0.0,
+        'hidden_layers': 3.0,
+        'hidden_units': 192.0,
+        'hidden_activation': 'prelu',
+        'hidden_dropout': 0.25,
+        'batch_norm': 'no',
         "output_activation": "sigmoid",
-        "optimizer": {
-            "lr": 0.009838711682220185,
-            "type": "sgd"
-        },
-        "loss": "binary_crossentropy",
-        "metrics": "accuracy",
-        "batch_size": 64.0
+        'optimizer': {'lr': 0.0002868932637027333, 'type': 'adam'},
+        "loss": "binary_crossentropy", 
+        "metrics": "accuracy", # カスタム評価関数も使える
+        'batch_size': 32.0,
     }
 
     runner = Runner(run_name, ModelNN, features, nn_params, file_setting, cv_setting, run_setting)
@@ -460,8 +457,8 @@ if __name__ == '__main__':
     # アンサンブル
     # em_train_probs = xgb_train_probs*0.5 + lgb_train_probs*0.5
     # em_probs = xgb_probs*0.5 + lgb_probs*0.5
-    em_train_probs = xgb_train_probs*0.35 + lgb_train_probs*0.35 + nn_train_probs*0.3
-    em_probs = xgb_probs*0.35 + lgb_probs*0.35 + nn_probs*0.3
+    em_train_probs = xgb_train_probs*0.25 + lgb_train_probs*0.5 + nn_train_probs*0.25
+    em_probs = xgb_probs*0.25 + lgb_probs*0.5 + nn_probs*0.25
     em_preds = get_label(train_labels, em_train_probs, em_probs)
 
     Submission.create_submission(run_name, dir_name, em_preds)  # submit作成
