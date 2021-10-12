@@ -10,7 +10,7 @@ python: 3.7.2
 
 ## クローン
 ```sh
-git clone https://github.com/takapy0210/ml_pipeline.git
+git clone https://github.com/snoopy0420/signate_kokusei.git
 ```
 
 ## フォルダ移動
